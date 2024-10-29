@@ -79,7 +79,7 @@ function Login() {
 
       <div className="login-section">
         <div className="header">
-          <h2>Login</h2>
+          <p>Login</p>
         </div>
 
         <div className="form">

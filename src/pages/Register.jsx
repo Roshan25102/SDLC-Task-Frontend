@@ -7,13 +7,13 @@ import "./Login.css";
 import HomePageBanner from "../components/HomePageBanner";
 
 function Register() {
-  // States which handles password visibility
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
 
-  // States which handles form validation
   const [formData, setFormData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
+    dob: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -21,11 +21,9 @@ function Register() {
   const [errors, setErrors] = useState({});
   const [formError, setFormError] = useState("");
 
-  // State which handles backend interaction
   const navigate = useNavigate();
   const VITE_REACT_APP_BACKEND_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
-  // Function which handles password visibility
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
   };
@@ -33,34 +31,33 @@ function Register() {
     setConfirmPasswordVisible(!confirmPasswordVisible);
   };
 
-  // Function which handles Toggle between Login and Register
   const handleRedirect = () => {
     navigate("/login");
   };
 
-  // Functions which handles form validation
   const validateField = (name, value) => {
     let error = "";
 
     switch (name) {
-      case "name":
+      case "firstName":
+      case "lastName":
         if (!value.trim()) {
-          error = "Invalid name";
+          error = `Invalid ${
+            name === "firstName" ? "first name" : "last name"
+          }`;
+        }
+        break;
+      case "dob":
+        if (!value) {
+          error = "Please enter a valid date of birth";
         }
         break;
       case "email":
-        if (!value.includes("@")) {
-          error = "Email must contain '@'";
-        } else if (!value.includes(".")) {
-          error = "Email must contain a '.' after '@'";
-        } else {
-          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!value.match(emailPattern)) {
-            error = "Invalid email format";
-          }
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value.match(emailPattern)) {
+          error = "Invalid email format";
         }
         break;
-
       case "password":
         if (value.length < 8) {
           error = "Must be at least 8 characters long";
@@ -72,7 +69,6 @@ function Register() {
           error = "Must contain at least one special character (@$!%*?&)";
         }
         break;
-
       case "confirmPassword":
         if (value !== formData.password) {
           error = "Password doesn't match";
@@ -81,7 +77,6 @@ function Register() {
       default:
         break;
     }
-    // console.log("Validation error:", error);
     return error;
   };
 
@@ -96,20 +91,15 @@ function Register() {
     });
 
     setErrors(formErrors);
-    // console.log("Validation errors:", formErrors);
-
     return Object.keys(formErrors).length === 0;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Clear the error for the current field
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: "",
     }));
-
     setFormData({ ...formData, [name]: value });
   };
 
@@ -155,34 +145,73 @@ function Register() {
 
       <div className="login-section">
         <div className="header">
-          <h2>Register</h2>
+          <p>Register</p>
         </div>
 
         <div className="form">
           <form action="" method="POST" onSubmit={handleSubmit}>
-            {/* Name Input */}
             <div className="input-container">
               <input
                 style={{
-                  backgroundImage: `url(${assets.name})`, // Name icon
+                  backgroundImage: `url(${assets.name})`,
                 }}
                 type="text"
-                name="name"
-                value={formData.name}
+                name="firstName"
+                value={formData.firstName}
                 onChange={handleChange}
-                placeholder="Name"
+                placeholder="First Name"
                 required
               />
               <div className="error">
-                {errors.name && <p className="error-message">{errors.name}</p>}
+                {errors.firstName && (
+                  <p className="error-message">{errors.firstName}</p>
+                )}
               </div>
             </div>
 
-            {/* Email Input */}
             <div className="input-container">
               <input
                 style={{
-                  backgroundImage: `url(${assets.emailIcon})`, // Email icon
+                  backgroundImage: `url(${assets.name})`,
+                }}
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                placeholder="Last Name"
+                required
+              />
+              <div className="error">
+                {errors.lastName && (
+                  <p className="error-message">{errors.lastName}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="input-container" >
+              <input
+                id="date"
+                style={{
+                  backgroundImage: `url(${assets.calender})`,
+                }}
+                type="date"
+                name="dob"
+                value={formData.dob}
+                onChange={handleChange}
+                placeholder="Date of Birth"
+                max={new Date().toISOString().split("T")[0]}
+                required
+                className="date-input"
+              />
+              <div className="error">
+                {errors.dob && <p className="error-message">{errors.dob}</p>}
+              </div>
+            </div>
+
+            <div className="input-container">
+              <input
+                style={{
+                  backgroundImage: `url(${assets.emailIcon})`,
                 }}
                 type="email"
                 name="email"
@@ -198,11 +227,10 @@ function Register() {
               </div>
             </div>
 
-            {/* Password Input */}
             <div className="input-container">
               <input
                 style={{
-                  backgroundImage: `url(${assets.password})`, // Password icon
+                  backgroundImage: `url(${assets.password})`,
                 }}
                 type={passwordVisible ? "text" : "password"}
                 name="password"
@@ -227,11 +255,10 @@ function Register() {
               </div>
             </div>
 
-            {/* Confirm Password Input */}
             <div className="input-container">
               <input
                 style={{
-                  backgroundImage: `url(${assets.password})`, // Password icon
+                  backgroundImage: `url(${assets.password})`,
                 }}
                 type={confirmPasswordVisible ? "text" : "password"}
                 name="confirmPassword"
@@ -258,16 +285,14 @@ function Register() {
               </div>
             </div>
 
-            {/* Login Button */}
             <button type="submit" className="login-btn">
               Register
             </button>
           </form>
         </div>
 
-        {/* Register Section */}
         <div className="register">
-          <p>Have an account ?</p>
+          <p>Have an account?</p>
           <button className="register-btn" onClick={handleRedirect}>
             Log in
           </button>

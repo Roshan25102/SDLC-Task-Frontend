@@ -1,20 +1,6 @@
-.main-container{
-  width: 100vw;
+.dashboard{
   height: 100vh;
-  display: flex;
-}
-.sidebar-container{
-  height: 100%;
-  width: 15%;
-  background-color:white;
+  width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  border-right: 1px solid #EDF5FE
-}
-.main-content-container{
-  height: 100%;
-  width:85%;
-  background-color:antiquewhite;
 }
