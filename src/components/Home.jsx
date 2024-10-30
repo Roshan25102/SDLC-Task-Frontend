@@ -5,7 +5,7 @@ import "./Home.css";
 const Home = () => {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const numberOfImages = 10; 
+  const numberOfImages = 70; 
   const fetchImages = async () => {
     try {
       const imagePromises = Array.from({ length: numberOfImages }, (_, index) =>
